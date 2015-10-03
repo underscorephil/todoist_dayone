@@ -1,14 +1,27 @@
 import requests, json, time
 from subprocess import call
 
+with open('config', 'r') as cfg_file:
+    config = json.load(cfg_file)
+
 url = "https://todoist.com/API/v6/get_all_completed_items"
 
-post_data = {"token": "arst1324",
-             "annotate_notes": "true", "since": "2014-10-02T20:54"}
+cur_time = time.strftime("%Y-%m-%dT%H:%M:%S", time.gmtime())
+
+if not config['lastrun']:
+    config['lastrun'] = cur_time
+
+post_data = {"token": config['token'],
+             "annotate_notes": "true", "since": config['lastrun']}
 
 r = requests.post(url, post_data)
 
 data = json.loads(r.text)
+
+config['lastrun'] = cur_time
+
+with open('config', 'w') as cfg_file:
+    json.dump(config, cfg_file)
 
 for task in data['items']:
     project_id = task['project_id']
