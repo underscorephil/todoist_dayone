@@ -36,7 +36,8 @@ for task in data['items']:
         for note in task['notes']:
             notes += "\n### %s\n    %s\n" % (note['posted'], note['content'])
 
-    text = "%s @%s_project @done @todoist%s" % (task['content'], data['projects'][str(task['project_id'])]['name'].replace(' ', '-'), notes) 
+    text = "%s @%s_project @done @todoist%s" % (task['content'],
+            data['projects'][str(task['project_id'])]['name'].replace(' ', '_'), notes) 
     command = ('"%s: %s"') % (time.strftime(
         "%m/%d/%Y %-I:%M%p", task_time), text)
 
